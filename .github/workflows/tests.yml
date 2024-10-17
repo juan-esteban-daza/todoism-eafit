@@ -1,0 +1,34 @@
+name: Run Playwright Tests
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  run-playwright-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Flask App Repository
+        uses: actions/checkout@v3
+
+      - name: Checkout Playwright Tests Repository
+        uses: actions/checkout@v3
+        with:
+          repository: your-username/playwright-tests-repo
+          path: playwright-tests
+          token: ${{ secrets.PLAYWRIGHT_REPO_TOKEN }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+        working-directory: ./playwright-tests
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./playwright-tests
+
+      - name: Run Playwright tests
+        run: npx playwright test
+        working-directory: ./playwright-tests
