@@ -34,7 +34,7 @@ jobs:
       - name: Run Flask app
         run: |
           source venv/bin/activate
-          flask init db
+          flask initdb
           flask translate compile
           nohup flask run
 
