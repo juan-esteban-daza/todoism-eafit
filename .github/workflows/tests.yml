@@ -1,34 +1,68 @@
-name: Run Playwright Tests
+name: Run Tests
 
 on:
   push:
     branches:
-      - master
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  run-playwright-tests:
+  run-tests:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout Flask App Repository
+      # Step 1: Checkout your Flask app repo
+      - name: Checkout Flask app repo
         uses: actions/checkout@v3
 
-      - name: Checkout Playwright Tests Repository
-        uses: actions/checkout@v3
+      # Step 2: Set up Python
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
-          repository: your-username/playwright-tests-repo
-          path: playwright-tests
-          token: ${{ secrets.PLAYWRIGHT_REPO_TOKEN }}
+          python-version: '3.11'  # Or any Python version your app uses
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
+      # Step 3: Install dependencies for the Flask app
+      - name: Install Flask app dependencies
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install -r requirements.txt
+
+      # Step 4: Start the Flask app
+      - name: Run Flask app
+        run: |
+          source venv/bin/activate
+          flask init db
+          flask translate compile
+          nohup flask run
+
+      # Step 5: Clone the tests repo
+      - name: Checkout tests repo
+        run: git clone https://github.com/juan-esteban-daza/todoism-eafit-tests.git
+        # Replace with the actual test repo URL
+
+      # Step 6: Install test repo dependencies if needed
+      # If your tests repo has its own requirements file
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          node-version: '16'
-        working-directory: ./playwright-tests
+          node-version: lts/*
 
       - name: Install dependencies
-        run: npm install
-        working-directory: ./playwright-tests
+        run: npm ci
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
 
       - name: Run Playwright tests
-        run: npx playwright test
-        working-directory: ./playwright-tests
+        run: npx playwright test todolist.spec.ts
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
