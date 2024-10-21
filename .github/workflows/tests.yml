@@ -36,7 +36,7 @@ jobs:
           source venv/bin/activate
           flask initdb
           flask translate compile
-          nohup flask run
+          nohup flask run > flask.log 2>&1 &
 
       # Step 5: Clone the tests repo
       - name: Checkout tests repo
