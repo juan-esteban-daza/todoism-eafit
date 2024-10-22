@@ -52,6 +52,7 @@ jobs:
 
       - name: Run Playwright tests
         run: |
+          cd todoism-eafit-tests
           npx playwright test todolist.spec.ts
 
       - name: Upload Artifact
