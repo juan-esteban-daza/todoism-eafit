@@ -53,7 +53,7 @@ jobs:
       - name: Install dependencies
         run: | 
           cd todoism-eafit-tests
-          npm install
+          npm ci
 
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
