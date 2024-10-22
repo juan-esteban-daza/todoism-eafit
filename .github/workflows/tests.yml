@@ -13,24 +13,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout your Flask app repo
       - name: Checkout Flask app repo
         uses: actions/checkout@v3
 
-      # Step 2: Set up Python
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'  # Or any Python version your app uses
+          python-version: '3.11'
 
-      # Step 3: Install dependencies for the Flask app
       - name: Install Flask app dependencies
         run: |
           python -m venv venv
           source venv/bin/activate
           pip install -r requirements.txt
 
-      # Step 4: Start the Flask app
       - name: Run Flask app
         run: |
           source venv/bin/activate
@@ -38,13 +34,9 @@ jobs:
           flask translate compile
           nohup flask run > flask.log 2>&1 &
 
-      # Step 5: Clone the tests repo
       - name: Checkout tests repo
         run: git clone https://github.com/juan-esteban-daza/todoism-eafit-tests.git
-        # Replace with the actual test repo URL
 
-      # Step 6: Install test repo dependencies if needed
-      # If your tests repo has its own requirements file
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -53,14 +45,13 @@ jobs:
       - name: Install dependencies
         run: | 
           cd todoism-eafit-tests
-          # npm ci
+          npm ci
 
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
       - name: Run Playwright tests
         run: |
-          # npm ls @playwright/test
           npx playwright test todolist.spec.ts
 
       - name: Upload Artifact
