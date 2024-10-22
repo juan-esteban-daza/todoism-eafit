@@ -53,14 +53,14 @@ jobs:
       - name: Install dependencies
         run: | 
           cd todoism-eafit-tests
-          npm ci
+          # npm ci
 
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
       - name: Run Playwright tests
         run: |
-          npm ls @playwright/test
+          # npm ls @playwright/test
           npx playwright test todolist.spec.ts
 
       - name: Upload Artifact
