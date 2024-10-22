@@ -59,7 +59,9 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run Playwright tests
-        run: npx playwright test todolist.spec.ts
+        run: |
+          npm ls @playwright/test
+          npx playwright test todolist.spec.ts
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
